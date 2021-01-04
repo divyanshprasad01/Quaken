@@ -7,7 +7,9 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private static final String USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=5&limit=100";
 
     private static final int EARTHQUAKE_LOADER_ID = 1;
+    private TextView mEmptyStateTextView;
 
     //  Adapter to show list of earthquakes in list View in main activity.
     private EarthquakeAdapter mAdapter;
@@ -27,10 +30,14 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
 //      creating a new adapter to show list of earthquakes in list view.
         mAdapter = new EarthquakeAdapter(this, new ArrayList<>());
         ListView earthquakeView = findViewById(R.id.listView);
         earthquakeView.setAdapter(mAdapter);
+
+        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        earthquakeView.setEmptyView(mEmptyStateTextView);
 //        Log.e("TEST", "TEST: BEFORE LOADER EXECUTE STARTED");
         LoaderManager loaderManager = getLoaderManager();
 
@@ -47,10 +54,16 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     @Override
     public Loader<List<newEarthQuake>> onCreateLoader(int id, Bundle args) {
         return new QuakeAsyncTaskLoader(this, USGS_URL);
+
     }
 
     @Override
     public void onLoadFinished(Loader<List<newEarthQuake>> loader, List<newEarthQuake> newEarthQuakes) {
+
+        View loadingIndicator = findViewById(R.id.loading_indicator);
+        loadingIndicator.setVisibility(View.GONE);
+
+        mEmptyStateTextView.setText(R.string.no_earthquakes);
 //        Log.e("TEST", "TEST: ON POST EXECUTE STARTED");
 //      To clear any previous earthquake data in the adapter
         mAdapter.clear();

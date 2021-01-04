@@ -37,7 +37,9 @@ public final class getOnlineContent {
         } catch (IOException e) {
             Log.e("LOG_TAG","Error in fetch method",e);
         }
-
+        if(jsonResponse == null){
+            return null;
+        }
 //       Calls a method defined in this class  extractFetauresfromJSON which takes in the string response and returns the List of Events of newEarthQuake type objects.
         Events = extractFeaturesfromJSON(jsonResponse);
 
