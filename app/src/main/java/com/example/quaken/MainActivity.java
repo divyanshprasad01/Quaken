@@ -2,18 +2,24 @@ package com.example.quaken;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Loader;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<newEarthQuake>> {
 
-//    USGS Request URL to get json response of last 100 earthquakes.
-    private static final String USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=5&limit=100" ;
+    //    USGS Request URL to get json response of last 100 earthquakes.
+    private static final String USGS_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=5&limit=100";
 
-//  Adapter to show list of earthquakes in list View in main activity.
+    private static final int EARTHQUAKE_LOADER_ID = 1;
+
+    //  Adapter to show list of earthquakes in list View in main activity.
     private EarthquakeAdapter mAdapter;
 
     @Override
@@ -22,44 +28,44 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 //      creating a new adapter to show list of earthquakes in list view.
-        mAdapter = new EarthquakeAdapter(this, new ArrayList<newEarthQuake>());
+        mAdapter = new EarthquakeAdapter(this, new ArrayList<>());
+        ListView earthquakeView = findViewById(R.id.listView);
+        earthquakeView.setAdapter(mAdapter);
+//        Log.e("TEST", "TEST: BEFORE LOADER EXECUTE STARTED");
+        LoaderManager loaderManager = getLoaderManager();
 
-//        Executing network request in background thread.
-        AsyncTask earthquakeAsyncTask = new AsyncTask();
-        earthquakeAsyncTask.execute(USGS_URL);
+        // Initialize the loader. Pass in the int ID constant defined above and pass in null for
+        // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
+        // because this activity implements the LoaderCallbacks interface).
+        loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
 
-
+//        Log.e("TEST", "TEST: AFTER Loader EXECUTE STARTED");
 
     }
 
-    private class AsyncTask extends android.os.AsyncTask<String,String , List<newEarthQuake>>{
 
-//         This method runs on a background thread and returns a list of last 100 earthquakes
-        @Override
-        protected List<newEarthQuake> doInBackground(String... urls) {
+    @Override
+    public Loader<List<newEarthQuake>> onCreateLoader(int id, Bundle args) {
+        return new QuakeAsyncTaskLoader(this, USGS_URL);
+    }
 
-//             @param result is a list of type newEarthQuake class which takes return vakue from fetch method of getOnlineContent class
-            List<newEarthQuake> result = getOnlineContent.fetch(urls[0]);
+    @Override
+    public void onLoadFinished(Loader<List<newEarthQuake>> loader, List<newEarthQuake> newEarthQuakes) {
+//        Log.e("TEST", "TEST: ON POST EXECUTE STARTED");
+//      To clear any previous earthquake data in the adapter
+        mAdapter.clear();
 
-            return result;
-        }
-
-//         This method is executed after completion of doInBackground method
-        @Override
-        protected void onPostExecute(List<newEarthQuake> newEarthQuakes) {
-//             To clear any previous earthquake data in the adapter
-            mAdapter.clear();
-
-            if(newEarthQuakes != null && !newEarthQuakes.isEmpty()){
-//                 it takes the list returned by do in background method and adds it to mAdapter and updates the ui to show the list
-//                 of last 100 earthquakes
-                mAdapter.addAll(newEarthQuakes);
-                ListView earthquakeView = (ListView) findViewById(R.id.listView);
-                earthquakeView.setAdapter(mAdapter);
-
-            }
-
+        if (newEarthQuakes != null && !newEarthQuakes.isEmpty()) {
+            mAdapter.addAll(newEarthQuakes);
         }
     }
+
+    @Override
+    public void onLoaderReset(Loader<List<newEarthQuake>> loader) {
+        mAdapter.clear();
+//        Log.e("TEST", "TEST: ON LOADER RESET CALLED STARTED");
+
+    }
+
 
 }

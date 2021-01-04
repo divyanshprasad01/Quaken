@@ -22,6 +22,7 @@ public final class getOnlineContent {
 
 //    method which takes url and does all the work and returns the list of earthquakes with required information to show on main ui.
     public static List<newEarthQuake> fetch(String Surl){
+        Log.e("TEST","TEST: FETCH METHOD CALLED STARTED");
         List<newEarthQuake> Events;
 
 //      takes a string and calls a method urlCreator defined in this class and checks weather the given string is a valid url and stores it in a URL object if it is valid .

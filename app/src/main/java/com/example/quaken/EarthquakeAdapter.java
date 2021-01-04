@@ -2,6 +2,7 @@ package com.example.quaken;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ public class EarthquakeAdapter extends ArrayAdapter<newEarthQuake> {
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
         return timeFormat.format(dateObject);
     }
+
     private String formatMagnitude(double magnitude) {
         DecimalFormat magnitudeFormat = new DecimalFormat("0.0");
         return magnitudeFormat.format(magnitude);
@@ -69,7 +71,7 @@ public class EarthquakeAdapter extends ArrayAdapter<newEarthQuake> {
         mTime.setText(formatTime(dateObject));
 
 
-
+//        Log.e("TEST", "TEST: ADAPTER  STARTED");
 
         return listItemView;
     }
