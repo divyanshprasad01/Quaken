@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/listItem"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="65dp"
     android:padding="3dp">
 
     <TextView
@@ -13,8 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
-        android:padding="5dp"
+        android:padding="15dp"
+        android:background="@drawable/magnitude_color_circle"
         android:text="7.6"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,9 +29,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="8dp"
         android:padding="5dp"
         android:text="Kathmandu"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/linearLayout"
         app:layout_constraintStart_toEndOf="@+id/Magnitude"
@@ -52,7 +58,7 @@
             android:gravity="center"
             android:padding="3dp"
             android:text="7 Jun 2030"
-            android:textSize="8sp" />
+            android:textSize="10sp" />
 
         <TextView
             android:id="@+id/Time"
@@ -61,7 +67,7 @@
             android:gravity="center"
             android:padding="3dp"
             android:text="20:08:55"
-            android:textSize="8sp" />
+            android:textSize="10sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
