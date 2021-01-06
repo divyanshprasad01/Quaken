@@ -4,13 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,8 +67,11 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
         View loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
-
-        mEmptyStateTextView.setText(R.string.no_earthquakes);
+        if(isConnected()) {
+            mEmptyStateTextView.setText(R.string.no_earthquakes);
+        }else{
+            mEmptyStateTextView.setText("No Internet Connection!!");
+        }
 //        Log.e("TEST", "TEST: ON POST EXECUTE STARTED");
 //      To clear any previous earthquake data in the adapter
         mAdapter.clear();
@@ -78,6 +86,12 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         mAdapter.clear();
 //        Log.e("TEST", "TEST: ON LOADER RESET CALLED STARTED");
 
+    }
+
+    public boolean isConnected(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 
 
